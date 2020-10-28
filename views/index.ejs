@@ -1,48 +1,95 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/moment@2.24.0/min/moment.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-streaming@1.8.0"></script>
+</head>
+<body>
+<div style="width: 50%;height: 50%">
+  <canvas id="myChart" ></canvas>
+</div>
 
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-    <canvas id="myChart" style="width: 60%;height: 60%"></canvas>
-
-  </body>
+</body>
 <script>
+  var nd=0;
   var ws = new WebSocket('ws://localhost:1888');
   ws.binaryType = 'arraybuffer';
   ws.onopen = function() {
     console.log('open');
   }
   ws.onmessage = function (evt) {
+    nd++;
     console.log(evt.data);
     var text = `<li>${evt.data}</li>`;
     // $('#tada').append(text);
+    nd=evt.data
     console.log(evt.data);
   }
 
-  var ctx = document.getElementById('myChart').getContext('2d');
-  var chart = new Chart(ctx, {
-    // The type of chart we want to create
-    type: 'line',
+  function randomScalingFactor() {
+    return nd;
+  }
 
-    // The data for our dataset
+  function onRefresh(chart) {
+    chart.config.data.datasets.forEach(function(dataset) {
+      dataset.data.push({
+        x: Date.now(),
+        y: randomScalingFactor()
+      });
+    });
+  }
+
+  var color = Chart.helpers.color;
+  var config = {
+    type: 'line',
     data: {
-      labels: ['0', '9:32 am', 'March', 'April', 'May', 'June', 'July'],
       datasets: [{
-        label: 'My First dataset',
-        backgroundColor: 'rgb(255, 99, 132)',
+        label: 'Nhiệt độ',
+        backgroundColor: color('rgb(255, 99, 132)').alpha(0.5).rgbString(),
         borderColor: 'rgb(255, 99, 132)',
-        data: [0, 10,20,21,22,23,24]
+        fill: false,
+        lineTension: 0,
+        borderDash: [8, 4],
+        data: []
       }]
     },
+    options: {
+      title: {
+        display: true,
+        text: 'Biểu đồ theo dõi nhiệt độ hiện tại'
+      },
+      scales: {
+        xAxes: [{
+          type: 'realtime',
+          realtime: {
+            duration: 20000,
+            refresh: 1000,
+            delay: 1000,
+            onRefresh: onRefresh
+          }
+        }],
+        yAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Nhiệt độ'
+          }
+        }]
+      },
+      tooltips: {
+        mode: 'nearest',
+        intersect: false
+      },
+      hover: {
+        mode: 'nearest',
+        intersect: false
+      }
+    }
+  };
 
-    // Configuration options go here
-    options: {}
-  });
+  window.onload = function() {
+    var ctx = document.getElementById('myChart').getContext('2d');
+    window.myChart = new Chart(ctx, config);
+  };
+
+
+
 </script>
-</html>
