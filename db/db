@@ -1,0 +1,15 @@
+CREATE TABLE public.nhiet_do (
+    id int NOT NULL,
+    nhiet_do real,
+    thoi_gian character varying(255)
+
+);
+ALTER TABLE public.nhiet_do OWNER TO postgres;
+ALTER TABLE public.nhiet_do ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.nhiet_do_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);

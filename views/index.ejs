@@ -42,15 +42,7 @@
   var config = {
     type: 'line',
     data: {
-      datasets: [{
-        label: 'Nhiệt độ',
-        backgroundColor: color('rgb(255, 99, 132)').alpha(0.5).rgbString(),
-        borderColor: 'rgb(255, 99, 132)',
-        fill: false,
-        lineTension: 0,
-        borderDash: [8, 4],
-        data: []
-      }]
+
     },
     options: {
       title: {
@@ -60,6 +52,10 @@
       scales: {
         xAxes: [{
           type: 'realtime',
+          scaleLabel: {
+            display: true,
+            labelString: 'Thời gian'
+          },
           realtime: {
             duration: 20000,
             refresh: 1000,
