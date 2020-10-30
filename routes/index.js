@@ -43,11 +43,11 @@ wss.on('connection', (ws, req) => {
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  nhet_do_rep.loadAll().then(function (data) {
-    console.log(data);
-    res.render('index', { title: 'Express' });
-
-  })
+  // nhet_do_rep.loadAll().then(function (data) {
+  //   console.log(data);
+  //   res.render('index', { title: 'Express' });
+  //
+  // })
   res.render('index', { title: 'Express' });
 });
 
