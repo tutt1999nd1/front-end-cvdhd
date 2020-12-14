@@ -10,7 +10,7 @@
   <link rel="icon" type="image/png" href="./img/favicon.png">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <title>
-    Now UI Dashboard by Creative Tim
+    Ứng dụng đo nhiệt độ
   </title>
   <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
   <!--     Fonts and icons     -->
@@ -86,7 +86,7 @@
 <!--        </li>-->
         <li class="active-pro">
           <a href="">
-            <p>version 1 by tutruong</p>
+            <p style="color: white">version 1 by tutruong</p>
           </a>
         </li>
       </ul>
@@ -166,27 +166,35 @@
           <div class="card card-chart">
             <div class="card-header">
               <h5 class="card-category">Thống kê</h5>
-              <h4 class="card-title">Nhiệt độ trung bình</h4>
-              <div class="dropdown">
-                <button type="button" class="btn btn-round btn-outline-default dropdown-toggle btn-simple btn-icon no-caret" data-toggle="dropdown">
-                  <i class="now-ui-icons loader_gear"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-right">
-                  <a class="dropdown-item" href="#">Action</a>
-                  <a class="dropdown-item" href="#">Another action</a>
-                  <a class="dropdown-item" href="#">Something else here</a>
-                  <a class="dropdown-item text-danger" href="#">Remove Data</a>
-                </div>
-              </div>
+              <h4 class="card-title">Nhiệt độ </h4>
+<!--              <div class="dropdown">-->
+<!--                <button type="button" class="btn btn-round btn-outline-default dropdown-toggle btn-simple btn-icon no-caret" data-toggle="dropdown">-->
+<!--                  <i class="now-ui-icons loader_gear"></i>-->
+<!--                </button>-->
+<!--                <div class="dropdown-menu dropdown-menu-right">-->
+<!--                  <a class="dropdown-item" href="#">Action</a>-->
+<!--                  <a class="dropdown-item" href="#">Another action</a>-->
+<!--                  <a class="dropdown-item" href="#">Something else here</a>-->
+<!--                  <a class="dropdown-item text-danger" href="#">Remove Data</a>-->
+<!--                </div>-->
+<!--              </div>-->
             </div>
             <div class="card-body">
-              <div class="chart-area">
-                <canvas id="lineChartExample"></canvas>
+              <div class="chart-area" style="display: flex;justify-content: center;align-items: center">
+<!--                <canvas id="lineChartExample"></canvas>-->
+                <div>
+                    <div>
+                        <label id="nhiet_do_cao" style="font-size:20px;color: #ff3131"></label>
+                    </div>
+                    <div style="margin-top: 20px">
+                        <label id="nhiet_do_thap" style="font-size:20px;color: #00B7FF"></label>
+                    </div>
+                </div>
               </div>
             </div>
             <div class="card-footer">
               <div class="stats">
-                <i class="now-ui-icons arrows-1_refresh-69"></i> Trong ngày hôm nay
+                <i class="now-ui-icons ui-2_time-alarm"></i> Ngày hôm nay
               </div>
             </div>
           </div>
@@ -200,12 +208,12 @@
             </div>
             <div class="card-body">
               <div class="chart-area">
-                <canvas id="barChartSimpleGradientsNumbers"></canvas>
+                <canvas id="chart_nhiet_do_tb"></canvas>
               </div>
             </div>
             <div class="card-footer">
               <div class="stats">
-                <i class="now-ui-icons ui-2_time-alarm"></i> Trong 7 ngày vừa qua
+                <i class="now-ui-icons ui-2_time-alarm"></i> Trong ngày hôm nay
               </div>
             </div>
           </div>
@@ -214,23 +222,13 @@
         <div class="col-lg-4 col-md-6">
           <div class="card card-chart">
             <div class="card-header">
-              <h5 class="card-category">*</h5>
-              <h4 class="card-title">*</h4>
-              <div class="dropdown">
-                <button type="button" class="btn btn-round btn-outline-default dropdown-toggle btn-simple btn-icon no-caret" data-toggle="dropdown">
-                  <i class="now-ui-icons loader_gear"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-right">
-                  <a class="dropdown-item" href="#">Action</a>
-                  <a class="dropdown-item" href="#">Another action</a>
-                  <a class="dropdown-item" href="#">Something else here</a>
-                  <a class="dropdown-item text-danger" href="#">Remove Data</a>
-                </div>
-              </div>
+              <h5 class="card-category">Thống kê</h5>
+              <h4 class="card-title">Nhiệt độ trung bình</h4>
+
             </div>
             <div class="card-body">
               <div class="chart-area">
-                <canvas id="lineChartExampleWithNumbersAndGrid"></canvas>
+                <canvas id="chart_nhiet_do_tuan"></canvas>
               </div>
             </div>
             <div class="card-footer">
@@ -476,14 +474,124 @@
 
 <script>
   var nd=0;
+  var nhiet_do_cao_nhat=0;
+  var nhiet_do_thap_nhat=100;
   var ws = new WebSocket('ws://localhost:1888');
   ws.binaryType = 'arraybuffer';
   ws.onopen = function() {
     console.log('open');
   }
+
+  //chart nhiet do trung binh trong ngay
+
+  $.ajax({
+      url:'/nhietdo',
+      type:'GET',
+      success:function (data) {
+          console.log(data)
+          var label=[];
+          var nhietdo=[];
+          for(var i=0;i<data.length;i++){
+              // if(i%2==0){
+                  nhietdo.push(data[i].nhiet_do);
+                  label.push(i+'h')
+              // }
+
+          }
+          var ctx = document.getElementById('chart_nhiet_do_tb').getContext('2d');
+
+          var chart_nhiet_do_tb = new Chart(ctx, {
+              type: 'line',
+              data: {
+                  labels: label,
+                  datasets: [{
+                      label: 'nhiệt độ',
+                      data: nhietdo,
+                      backgroundColor:
+                          'rgba(255, 99, 132, 0.2)'
+                      ,
+                      borderColor:
+                          'rgba(255, 99, 132, 1)',
+
+                      borderWidth: 1
+                  }]
+              },
+              options: {
+                  scales: {
+                      yAxes: [{
+                          ticks: {
+                              beginAtZero: true
+                          }
+                      }]
+                  }
+              }
+          });
+
+      }
+  })
+
+  //  //chart nhiet do trung binh trong 7 ngay
+
+  $.ajax({
+      url:'/nhietdoAll',
+      type:'GET',
+      success:function (data) {
+          console.log(data)
+          var label=[];
+          var nhietdo=[];
+
+          for(var i=0;i<data.length;i++){
+              // if(i%2==0){
+                  nhietdo.push(data[i].nhiet_do);
+                  label.push(i+'h')
+              // }
+
+          }
+          var ctx = document.getElementById('chart_nhiet_do_tuan').getContext('2d');
+
+          var chart_nhiet_do_tuan = new Chart(ctx, {
+              type: 'line',
+              data: {
+                  labels: label,
+                  datasets: [{
+                      label: 'nhiệt độ',
+                      data: nhietdo,
+                      backgroundColor:
+                          'rgba(255, 99, 132, 0.2)'
+                      ,
+                      borderColor:
+                          'rgba(255, 99, 132, 1)',
+
+                      borderWidth: 1
+                  }]
+              },
+              options: {
+                  scales: {
+                      yAxes: [{
+                          ticks: {
+                              beginAtZero: true
+                          }
+                      }]
+                  }
+              }
+          });
+
+      }
+  })
+
+  //
   ws.onmessage = function (evt) {
     nd++;
-    console.log(evt.data);
+      if(nhiet_do_cao_nhat<evt.data){
+          nhiet_do_cao_nhat=parseFloat(evt.data)
+          document.getElementById('nhiet_do_cao').innerHTML='Nhiệt độ cao nhất: '+evt.data+'℃'
+      }
+      if(nhiet_do_thap_nhat>evt.data){
+          nhiet_do_thap_nhat=parseFloat(evt.data)
+          document.getElementById('nhiet_do_thap').innerHTML='Nhiệt độ thấp nhất: '+evt.data+'℃'
+      }
+
+
     var text = `<li>${evt.data}</li>`;
     // $('#tada').append(text);
     nd=evt.data
@@ -599,7 +707,7 @@
         }]
       },
       legend: {
-        fontColor: "rgba(255,255,255,0.4)",
+        fontColor: "white",
         fontStyle: "bold",
         position: "top",
         fillStyle: "#FFF",
