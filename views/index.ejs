@@ -233,7 +233,7 @@
             </div>
             <div class="card-footer">
               <div class="stats">
-                <i class="now-ui-icons arrows-1_refresh-69"></i> Just Updated
+                <i class="now-ui-icons arrows-1_refresh-69"></i> Trong 7 ngày
               </div>
             </div>
           </div>
@@ -531,7 +531,6 @@
   })
 
   //  //chart nhiet do trung binh trong 7 ngay
-
   $.ajax({
       url:'/nhietdoAll',
       type:'GET',
@@ -539,28 +538,70 @@
           console.log(data)
           var label=[];
           var nhietdo=[];
+          var tong_nhiet_do1=0;
+          var tong_nhiet_do2=0;
+          var tong_nhiet_do3=0;
+          var tong_nhiet_do4=0;
+          var tong_nhiet_do5=0;
+          var tong_nhiet_do6=0;
+          var tong_nhiet_do7=0;
 
           for(var i=0;i<data.length;i++){
               // if(i%2==0){
-                  nhietdo.push(data[i].nhiet_do);
-                  label.push(i+'h')
+              //     nhietdo.push(data[i].nhiet_do);
+              //     label.push(i+'h')
               // }
-
+              console.log('data[i].thoi_gian',data[i].thoi_gian)
+            if(data[i].thoi_gian.split(' ')[1]==moment().add(-1,'days').format('DD-MM-YYYY')){
+                tong_nhiet_do1=tong_nhiet_do1+parseFloat(data[i].nhiet_do)
+            }if(data[i].thoi_gian.split(' ')[1]==moment().add(-2,'days').format('DD-MM-YYYY')){
+                tong_nhiet_do2=tong_nhiet_do2+parseFloat(data[i].nhiet_do)
+            }if(data[i].thoi_gian.split(' ')[1]==moment().add(-3,'days').format('DD-MM-YYYY')){
+                tong_nhiet_do3=tong_nhiet_do3+parseFloat(data[i].nhiet_do)
+            }if(data[i].thoi_gian.split(' ')[1]==moment().add(-4,'days').format('DD-MM-YYYY')){
+                tong_nhiet_do4=tong_nhiet_do4+parseFloat(data[i].nhiet_do)
+            }if(data[i].thoi_gian.split(' ')[1]==moment().add(-5,'days').format('DD-MM-YYYY')){
+                tong_nhiet_do5=tong_nhiet_do5+parseFloat(data[i].nhiet_do)
+            }if(data[i].thoi_gian.split(' ')[1]==moment().add(-6,'days').format('DD-MM-YYYY')){
+                tong_nhiet_do6=tong_nhiet_do6+parseFloat(data[i].nhiet_do)
+            }if(data[i].thoi_gian.split(' ')[1]==moment().add(-7,'days').format('DD-MM-YYYY')){
+                tong_nhiet_do7=tong_nhiet_do7+parseFloat(data[i].nhiet_do)
+            }
           }
+          nhietdo.push(tong_nhiet_do1/24);
+          label.push(moment().add(-1,'days').format('DD-MM-YYYY'));
+
+          nhietdo.push(tong_nhiet_do2/24);
+          label.push(moment().add(-2,'days').format('DD-MM-YYYY'));
+          nhietdo.push(tong_nhiet_do3/24);
+          label.push(moment().add(-3,'days').format('DD-MM-YYYY'));
+          nhietdo.push(tong_nhiet_do4/24);
+          label.push(moment().add(-4,'days').format('DD-MM-YYYY'));
+          nhietdo.push(tong_nhiet_do5/24);
+          label.push(moment().add(-5,'days').format('DD-MM-YYYY'));
+          nhietdo.push(tong_nhiet_do6/24);
+          label.push(moment().add(-6,'days').format('DD-MM-YYYY'));
+          nhietdo.push(tong_nhiet_do7/24);
+          label.push(moment().add(-7,'days').format('DD-MM-YYYY'));
+
+
+
+
+
           var ctx = document.getElementById('chart_nhiet_do_tuan').getContext('2d');
 
           var chart_nhiet_do_tuan = new Chart(ctx, {
-              type: 'line',
+              type: 'bar',
               data: {
                   labels: label,
                   datasets: [{
                       label: 'nhiệt độ',
                       data: nhietdo,
                       backgroundColor:
-                          'rgba(255, 99, 132, 0.2)'
+                          'rgba(156,201,255,0.2)'
                       ,
                       borderColor:
-                          'rgba(255, 99, 132, 1)',
+                          'rgb(0,63,255)',
 
                       borderWidth: 1
                   }]
@@ -595,7 +636,6 @@
     var text = `<li>${evt.data}</li>`;
     // $('#tada').append(text);
     nd=evt.data
-    console.log(evt.data);
   }
 
   function randomScalingFactor() {
