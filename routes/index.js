@@ -10,7 +10,7 @@ let wss = new Websocket.Server({
 });
 
 var settings = {
-  mqttServerUrl: "localhost",
+  mqttServerUrl: "broker.emqx.io",
   port: 1883,
   topic: "myTopicPub"
 }
@@ -33,11 +33,11 @@ wss.on('connection', (ws, req) => {
     console.log('t',moment().format('MMMM Do YYYY,h:mm:ss '));
     var data={
       nhiet_do:msg,
-      thoi_gian:moment().add(-7,'days').format('HH:mm:ss DD-MM-YYYY ')
+      thoi_gian:moment().format('HH:mm:ss DD-MM-YYYY ')
     }
     if(moment().hours()==0&&moment().seconds()==0&&moment().minutes()==0)
       nhet_do_rep.add(data);
-    if(i<25)      nhet_do_rep.add(data);
+    // if(i<25)      nhet_do_rep.add(data);
 
     // console.log(moment().minutes())
   })
