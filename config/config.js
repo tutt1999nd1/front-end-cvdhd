@@ -14,9 +14,9 @@ config.sesssionSecret = 'bigboss';
 config.dbOptions = {
     "host": process.env.DB_HOST || "localhost",
     "user": process.env.DB_USER || "postgres",
-    "password": process.env.DB_PASSWORD || "123456aA@",
+    "password": process.env.DB_PASSWORD || "Thanhtu69",
     "port": process.env.DB_PORT || 5432,
-    "database": process.env.DB_DATABASE || "postgres",
+    "database": process.env.DB_DATABASE || "19/10",
     "connectionLimit": process.env.DB_CONNECTION_LIMIT || 5000,
     "waitForConnections": process.env.DB_WAIT_FOR_CONNECTIONS || true,
     "debug": false,
